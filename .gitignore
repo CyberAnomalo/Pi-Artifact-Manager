@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+
+# 插件运行时产物（artifact 库 / blob / 导出）
+.visual-artifacts/
+
+# 实验临时产物（L3 字体校验、smoke 工作目录、人工验收测试图）
+.l3-font-check.png
+.l3-smoke/
+manual-test-code.png
