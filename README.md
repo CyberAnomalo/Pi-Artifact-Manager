@@ -4,6 +4,15 @@ A [Pi coding-agent](https://github.com/earendil-works/pi) extension that solves 
 
 > **第一阶段目标**：解决 Coding Harness 多模态上下文污染问题，同时留下未来扩展 Artifact 系统的接口。
 
+## iOS 分支
+
+`ios` 分支另提供 `pi-artifact-manager/ios`，用于 CameraMan 的持久照片管理。
+它复用 artifact ID、生命周期和引用语义，不运行桌面 Pi Agent。
+照片字节由 APP 的原生存储处理，Live 预览帧不进入该适配器。
+
+接口、存储责任和测试命令见 [iOS adapter](docs/ios-adapter.md)。
+以下桌面 hooks、SQLite、payload guard 和字节恢复说明不适用于 iOS 适配器。
+
 ## 问题
 
 长会话中历史图片以原始字节形式反复进入 LLM 请求：上传一张截图后，之后每一轮都为它重复付费，上下文被无关媒体污染，最终撑爆上下文窗口。
@@ -23,6 +32,7 @@ A [Pi coding-agent](https://github.com/earendil-works/pi) extension that solves 
 pi-artifact-manager/
 ├── index.ts                  # 入口（转发到 src/extension）
 ├── src/
+│   ├── ios/                  # CameraMan 适配器，不加载桌面 Pi runtime
 │   ├── extension/
 │   │   ├── index.ts          # 扩展组装：hooks + tools + /artifact 命令
 │   │   ├── hooks.ts          # input/context/guard/session hooks
@@ -76,7 +86,7 @@ pi -e /path/to/pi-artifact-manager/index.ts
 ```bash
 npm install              # postinstall 自动去重 pi 依赖嵌套副本
 npm run typecheck        # tsc --noEmit
-npm test                 # 全部：unit + e2e + l2 + benchmark（72 用例）
+npm test                 # 全部：unit + e2e + l2 + benchmark，以运行报告为准
 npm run test:unit        # 单元层
 npm run test:e2e         # L1 真实 pi 运行时层
 npm run test:l2          # L2 真实 CLI + mock provider（真实 HTTP 出口）
